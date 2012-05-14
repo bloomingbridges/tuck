@@ -19,9 +19,10 @@ Whenever you call __tuck__ he goes through your "busy" folders (by default that 
 
 3. Open a new Terminal window, navigate to the directory __tuck__ sits in and invoke him as follows:
 
-	./tuck
 
-Or make use of the '-p' option to show a QuickLook preview for every entry:
+    ./tuck
+
+	# Or make use of the '-p' option to show a QuickLook preview for every entry:
 
 	./tuck -p
 
