@@ -13,11 +13,11 @@ Whenever you call __tuck__ he goes through your "busy" folders (by default that 
 
 ### Usage
 
-* First copy __tuck__ (including the configuration file 'tuck.config.yaml') into a folder that's easily reachable e.g. your home directory.
+1. First copy __tuck__ (including the configuration file 'tuck.config.yaml') into a folder that's easily reachable e.g. your home directory.
 
-* Add folders to watch and destination-key pairs to 'tuck.config.yaml' with a regular text editor.
+2. Add folders to watch and destination-key pairs to 'tuck.config.yaml' with a regular text editor.
 
-* Open a new Terminal window, navigate to the directory __tuck__ sits in and invoke him as follows:
+3. Open a new Terminal window, navigate to the directory __tuck__ sits in and invoke him as follows:
 
 	./tuck
 
@@ -25,7 +25,7 @@ Or make use of the '-p' option to show a QuickLook preview for every entry:
 
 	./tuck -p
 
-* For each encountered file enter the character corresponding to the desired directory and confirm by hitting return. Is no character given the file will be skipped, a single space will stop the script completely.
+For each encountered file enter the character corresponding to the desired directory and confirm by hitting return. Is no character given the file will be skipped, a single space will stop the script completely.
 
 Happy tucking!
 
