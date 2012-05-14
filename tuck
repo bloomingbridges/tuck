@@ -1,0 +1,118 @@
+#!/usr/bin/env ruby
+require "yaml"
+require "fileutils"
+
+class Tuck
+	
+	def initialize
+		@preview = true if ARGV[0] and ARGV[0] === "-p"
+		@places = { "D" => [ "Documents", "~/Documents" ],
+				    "P" => [ "Pictures", "~/Pictures" ]
+				  }
+
+		if File.exists?("#{$0}.config.yaml") then
+			config = YAML.load_file( "#{File.expand_path(File.dirname(__FILE__))}/tuck.config.yaml" )
+			@watchList = config[ 'watch' ]
+			config[ 'favourites' ].each do |fav|
+				@places[fav['key']] = [ fav['name'], fav['path'] ]
+				system("clear")
+				Tuck.printLogo
+			end
+		else
+			STDOUT.puts("Tuck: \"I don't have the slightest clue where to begin, Sir.\"")
+			exit
+		end
+
+		@salutations = [ 
+			"All tucked away. 't was jolly good fun, Sir!",
+			"A rig as clean as a hound's tooth, Sir! Good times.",
+			"Way better now, Sir! It's been a real pleasure as always."
+			]
+
+	end
+
+
+	private
+
+	def Tuck.printLogo
+		STDOUT.puts("#########################")
+		STDOUT.puts("# ##### #  #  ### #  #  #")
+		STDOUT.puts("#   #   #  # #    # #   #")
+		STDOUT.puts("#   #   ####  ### #  #  #")
+		STDOUT.puts("#########################")
+	end
+
+	def printKeymap 
+		message = "Tuck: \"Move to.. "
+		@places.each do |key, option|
+			message << "[#{key}] #{option[0]}, "
+		end
+		message = message[ 0, message.length-2 ] + "\""
+		STDOUT.puts(message)
+	end
+
+	def askForInput
+		STDOUT.print("? ")
+		input = STDIN.gets()
+		if(input === "\n") then
+			STDOUT.puts("Tuck: \"Let's skip this one, shall we?\"")
+			true
+		elsif(input === " \n") then
+			STDOUT.puts("Tuck: \"Abort mission!\"")
+			@running = false
+			true
+		else
+			# STDOUT.puts(@places.has_key?( input[/(\d*)\s/, 1]).to_s )
+			if @places.has_key?( input[0,1] ) then
+				input[0,1]
+			else
+				STDOUT.puts("Tuck: \"I beg your pardon, Sir?\"")
+				false
+			end
+		end
+	end
+
+
+	public
+
+	def run
+		@running = true
+		@watchList.each do |dir| 
+			STDOUT.puts("\nTuck: \"Checking #{dir}..\"")
+			files_handled = 0
+			Dir.foreach(File.expand_path(dir)) do |item|
+				next if item == '.' or item == '..' or item[0,1] == '.'
+				next if File.directory?(File.expand_path(dir) + "/" + item)
+				break if not @running
+				files_handled += 1
+					STDOUT.puts("\nTuck: \"Next up is '#{item}'\"")
+				if @preview then
+					system("qlmanage -d 0 -p \"#{dir}#{item}\" >& /dev/null")
+				end
+				printKeymap
+				STDOUT.puts("Tuck: \"Use [SPACE] to skip and [ESC] to stop\"")
+				key = false
+				while not key
+					key = askForInput
+					if key.class === "String"
+						place = @places[key]
+						STDOUT.puts("Tuck: \"Moving document to #{place[0]}..\"")
+						if File.exists?(File.expand_path(place[1]))
+							FileUtils.mv(File.expand_path(dir) + "/" + item, File.expand_path(place[1]) + "/" + item)
+						else
+							STDOUT.puts("Tuck: \"Hmm.. This place doesn't appear to exist, Sir. May I suggest..\"")
+							printKeymap
+							key = false
+						end
+					end
+				end
+			end
+			if files_handled === 0 then STDOUT.print("Tuck: \"Nothing here, Sir!\"\n") end
+		end
+		system("clear")
+		STDOUT.puts("Tuck: \"#{@salutations.shuffle.first}\"")
+	end
+
+end
+
+Tuck.new().run

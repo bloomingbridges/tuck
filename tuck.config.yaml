@@ -1,0 +1,17 @@
+---
+watch:
+    - ~/Desktop/
+    - ~/Downloads/
+
+favourites:
+    - name: Miscellaneous
+      path: ~/Downloads/Dump/
+      key:  m
+
+    - name: Inspiration
+      path: ~/Pictures/Inspiration/
+      key:  i
+    
+    - name: Unicorns
+      path: ~/Documents/University/
+      key:  u
