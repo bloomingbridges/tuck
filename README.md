@@ -9,16 +9,21 @@ Likewise do I feel about sorting stuff into folders. While this process could in
 
 __tuck__ is a command line tool - written in Ruby - for filing your incoming clutter into predefined folders.
 
-Whenever you call __tuck__ he goes through your "busy" folders (by default that would be 'Desktop' and 'Downloads') and asks where to put each file (not folders!), to which you reply with a single character. You're welcome :>
+Whenever you call __tuck__ he goes through your "busy" folders (by default that would be 'Desktop' and 'Downloads') and asks where to put each file (not folders!), to which you reply with a single character. 
 
 ### Usage
 
 <ol> 
-	<li>First copy __tuck__ (including the configuration file 'tuck.config.yaml') into a folder that's easily reachable e.g. your home directory.</li>
+	<li>
+		First copy <strong>tuck</strong> (including the configuration file 'tuck.config.yaml') into a folder that's easily reachable e.g. your home directory.
+	</li>
 
-	<li>Add folders to watch and destination-key pairs to 'tuck.config.yaml' with a regular text editor.</li>
+	<li>
+		Add folders to watch and destination-key pairs to 'tuck.config.yaml' with a plain text editor (e.g. TextEdit).
+	</li>
 
-	<li>Open a new Terminal window, navigate to the directory __tuck__ sits in and invoke him as follows:
+	<li>
+		<p>Open a new Terminal window, navigate to the directory <strong>tuck</strong> sits in and invoke him as follows:</p>
 
 		<pre>./tuck</pre>
 
@@ -27,7 +32,9 @@ Whenever you call __tuck__ he goes through your "busy" folders (by default that 
 		<pre>./tuck -p</pre>
 	</li>
 
-	<li>For each encountered file enter the character corresponding to the desired directory and confirm by hitting return. Is no character given the file will be skipped, a single space will stop the script completely.</li>
+	<li>
+		For each encountered file enter the character corresponding to the desired directory and confirm by hitting return. Is no character given the file will be skipped, a single space will show a preview and an exclamation mark will stop the script altogether.
+	</li>
 </ol>
 
 Happy tucking!

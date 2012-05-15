@@ -19,7 +19,7 @@ class Tuck
 				Tuck.printLogo
 			end
 		else
-			STDOUT.puts("Tuck: \"I don't have the slightest clue where to begin, Sir.\"")
+			say("I don't have the slightest clue where to begin, Sir.")
 			exit
 		end
 
@@ -55,10 +55,13 @@ class Tuck
 		STDOUT.print("? ")
 		input = STDIN.gets()
 		if(input === "\n") then
-			STDOUT.puts("Tuck: \"Let's skip this one, shall we?\"")
+			say("Let's skip this one, shall we?")
 			true
 		elsif(input === " \n") then
-			STDOUT.puts("Tuck: \"Abort mission!\"")
+			say("Let's take a look..")
+			"PREVIEW"
+		elsif(input === "!\n") then
+			say("Abort mission!")
 			@running = false
 			true
 		else
@@ -66,10 +69,15 @@ class Tuck
 			if @places.has_key?( input[0,1] ) then
 				input[0,1]
 			else
-				STDOUT.puts("Tuck: \"I beg your pardon, Sir?\"")
+				say("I beg your pardon, Sir?")
 				false
 			end
 		end
+	end
+
+	def say(line, newLine = false)
+		pre = if newLine then "\n" else '' end
+		STDOUT.puts(pre + "Tuck: \"" + line + "\"")
 	end
 
 
@@ -85,32 +93,36 @@ class Tuck
 				next if File.directory?(File.expand_path(dir) + "/" + item)
 				break if not @running
 				files_handled += 1
-					STDOUT.puts("\nTuck: \"Next up is '#{item}'\"")
+					say("Next up is '#{item}'", true)
 				if @preview then
 					system("qlmanage -d 0 -p \"#{dir}#{item}\" >& /dev/null")
 				end
 				printKeymap
-				STDOUT.puts("Tuck: \"Use [SPACE] to skip and [ESC] to stop\"")
+				say("Hit [SPACE] to preview, [RETURN] to skip and [!] to stop tucking")
 				key = false
 				while not key
 					key = askForInput
-					if key.class === "String"
+					# STDOUT.puts("#{key.class} ====================== ")
+					if key === "PREVIEW"
+						system("qlmanage -d 0 -p \"#{dir}#{item}\" >& /dev/null")
+						key = false
+					elsif key.class === "String"
 						place = @places[key]
-						STDOUT.puts("Tuck: \"Moving document to #{place[0]}..\"")
+						say("Moving document to #{place[0]}..")
 						if File.exists?(File.expand_path(place[1]))
 							FileUtils.mv(File.expand_path(dir) + "/" + item, File.expand_path(place[1]) + "/" + item)
 						else
-							STDOUT.puts("Tuck: \"Hmm.. This place doesn't appear to exist, Sir. May I suggest..\"")
+							say("Hmm.. This place doesn't appear to exist, Sir. May I suggest..")
 							printKeymap
 							key = false
 						end
 					end
 				end
 			end
-			if files_handled === 0 then STDOUT.print("Tuck: \"Nothing here, Sir!\"\n") end
+			if files_handled === 0 then say("Nothing here, Sir!\n") end
 		end
 		system("clear")
-		STDOUT.puts("Tuck: \"#{@salutations.shuffle.first}\"")
+		say(@salutations.shuffle.first)
 	end
 
 end
