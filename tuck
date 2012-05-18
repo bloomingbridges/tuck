@@ -1,4 +1,6 @@
 #!/usr/bin/env ruby
+#encoding: utf-8
+
 require "yaml"
 require "fileutils"
 
@@ -15,7 +17,7 @@ class Tuck
 			@watchList = config[ 'watch' ]
 			config[ 'favourites' ].each do |fav|
 				@places[fav['key']] = [ fav['name'], fav['path'] ]
-				system("clear")
+				system('clear')
 				Tuck.printLogo
 			end
 		else
@@ -24,6 +26,7 @@ class Tuck
 		end
 
 		@salutations = [ 
+			"Clean at last, Sir! How very delightful.",
 			"All tucked away. 't was jolly good fun, Sir!",
 			"A rig as clean as a hound's tooth, Sir! Good times.",
 			"Way better now, Sir! It's been a real pleasure as always."
@@ -35,20 +38,22 @@ class Tuck
 	private
 
 	def Tuck.printLogo
+		STDOUT.puts(" " * 23 + "#")
 		STDOUT.puts("#########################")
-		STDOUT.puts("# ##### #  #  ### #  #  #")
-		STDOUT.puts("#   #   #  # #    # #   #")
-		STDOUT.puts("#   #   ####  ### #  #  #")
+		STDOUT.puts("# ##### #  #  ### #  #   #")
+		STDOUT.puts("#   #   #  # #    # #     #")
+		STDOUT.puts("#   #   ####  ### #  #   #")
 		STDOUT.puts("#########################")
+		STDOUT.puts(" " * 23 + "#")
 	end
 
 	def printKeymap 
-		message = "Tuck: \"Move to.. "
+		say("Thoughts, Sir?")
+		message = ""
 		@places.each do |key, option|
-			message << "[#{key}] #{option[0]}, "
+			message << " [#{key}] #{option[0]}\n"
 		end
-		message = message[ 0, message.length-2 ] + "\""
-		STDOUT.puts(message)
+		STDOUT.print(message)
 	end
 
 	def askForInput
@@ -93,20 +98,19 @@ class Tuck
 				next if File.directory?(File.expand_path(dir) + "/" + item)
 				break if not @running
 				files_handled += 1
-					say("Next up is '#{item}'", true)
+				say("Next up is '#{item}'", true)
 				if @preview then
-					system("qlmanage -d 0 -p \"#{dir}#{item}\" >& /dev/null")
+					system("qlmanage -d 0 -p \"#{dir + item}\" >& /dev/null")
 				end
 				printKeymap
 				say("Hit [SPACE] to preview, [RETURN] to skip and [!] to stop tucking")
 				key = false
 				while not key
 					key = askForInput
-					# STDOUT.puts("#{key.class} ====================== ")
-					if key === "PREVIEW"
-						system("qlmanage -d 0 -p \"#{dir}#{item}\" >& /dev/null")
+					if key == "PREVIEW"
+						system("qlmanage -d 0 -p \"#{dir + item}\" >& /dev/null")
 						key = false
-					elsif key.class === "String"
+					elsif key.instance_of? String
 						place = @places[key]
 						say("Moving document to #{place[0]}..")
 						if File.exists?(File.expand_path(place[1]))
@@ -119,7 +123,7 @@ class Tuck
 					end
 				end
 			end
-			if files_handled === 0 then say("Nothing here, Sir!\n") end
+			unless files_handled == 0 then say("Looking good, Sir!") end
 		end
 		system("clear")
 		say(@salutations.shuffle.first)
